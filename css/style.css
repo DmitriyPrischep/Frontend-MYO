@@ -98,6 +98,10 @@ strong.header-text {
 	padding-left: 50px;
 	padding-top: 25px;
 }
+
+.strong-text {
+	color:  #0277BD;
+}
 /* Middle
 -----------------------------------------------------------------------------*/
 .content {
@@ -108,6 +112,13 @@ strong.header-text {
 .middle {
 	text-align: center;
 }
+.speed{
+	text-align: right;
+	padding-left: 30%;
+	color:  #0277BD;
+	font-size: 24px;
+}
+
 /* Footer
 -----------------------------------------------------------------------------*/
 .footer {

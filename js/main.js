@@ -5,7 +5,6 @@ var vShiftX = vShiftY = 0;
 var distance = -700;
 var SpeedTurn = 0.05; //0.05
 var iHalfX, iHalfY;
-
 // Создаем сферу
 var obj = new sphere(16);
 
@@ -16,7 +15,7 @@ var i = 0;
 
 socket.onmessage = function(event) {
     var data_myo = JSON.parse(event.data);
-    buyerData.datasets[0].data.push(data_myo.speed);
+    buyerData.datasets[0].data.push(data_myo.real_speed);
     
     buyerData.labels.push(++i);
     if(i > 17){
@@ -24,6 +23,7 @@ socket.onmessage = function(event) {
         buyerData.labels.shift();
     }
     new Chart(buyers).Line(buyerData);
+    showMessage(data_myo.teor_speed);
 
     switch (data_myo.route) {
         case 3: // Left Key
@@ -62,15 +62,23 @@ socket.onmessage = function(event) {
                 drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2 + 40, 0, 100, 200);
             }
             break; 
+        case 0 : // Stop
+            var x = iHalfX;
+            var y = iHalfY;
+            if (x > 0 && y > 0) {
+                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
+                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
+            }
+            break;
     }
 };
 
-function showMessage(message) {
-    var messageElem = document.createElement('div');
-    messageElem.appendChild(document.createTextNode(message));
-    document.getElementById('subscribe').appendChild(messageElem);
+function showMessage(mes) {
+    var div = document.getElementById('theoretical_speed');
+    div.innerHTML = mes;
 }
 
+// Структура графика
 var buyers = document.getElementById('buyers').getContext('2d');
 var buyerData = {
    labels : [],
@@ -85,15 +93,6 @@ var buyerData = {
    ]
 }
 new Chart(buyers).Line(buyerData);
-
-
-
-
-
-
-
-
-
 
 
 // Инициализация сцены
@@ -112,90 +111,9 @@ function sceneInit() {
 
     // Присоединить обработчики событий
     document.onkeydown = handleKeydown;
-    document.onkeyup = handleKeyup;
 
     // Основной цикл сцен
-    setInterval(drawScene, 25);
-}
-
-
-
-
-var canvas_car = document.getElementById('car'),
-context_car = canvas_car.getContext('2d'),
-img = new Image();
-img.src = 'images/car.png';
-img.onload = function() {    
-    context_car.drawImage(img, (canvas_car.width/2 - 50) , (canvas_car.height/2 - 100), 100, 200);  
-}
-
-var TO_RADIANS = Math.PI/180; 
-function drawRotatedImage(image, x, y, angle) { 
-
-    context_car.save(); 
-    //context_car.clearRect((canvas_car.width/2 - 50), (canvas_car.height/2 - 100), 100, 200);
-    context_car.clearRect(50, 0, canvas_car.width-50, canvas_car.height);
-    context_car.translate(x, y);
-
-    context_car.rotate(angle * TO_RADIANS);
- 
-    context_car.drawImage(image, -(image.width/2), -(image.height/2));
- 
-    context_car.restore(); 
-}
-
-function handleKeyup (e) {
-    kCode = ((e.which) || (e.keyCode));
-    switch (kCode) {
-        default:
-            drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2, 0, 100, 200); 
-        break;
-    }
-}
-
-
-
-// Обработчик события OnKeyDown
-function handleKeydown(e) {
-    kCode = ((e.which) || (e.keyCode));
-    switch (kCode) {
-        case 37: // Left Key
-            var x = 0;
-            var y = iHalfY;
-            if ((x >= 0) && (y >= 0)) {
-                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
-                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
-                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2, -30, 100, 200); 
-            }
-            break; 
-        case 38:  // Up key
-            var x = iHalfX;
-            var y = 0;
-            if ((x >= 0) && (y >= 0)) {
-                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
-                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
-                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2 - 40, 0, 100, 200);
-            }
-            break; 
-        case 39: // Right Key
-            var x = canvas.width;
-            var y = iHalfY;
-            if ((x >= 0) && (y >= 0)) {
-                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
-                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
-                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2, 30, 100, 200); 
-            }
-            break; 
-        case 40: // Down key
-            var x = iHalfX;
-            var y = canvas.height;
-            if ((x > 0) && (y > 0)) {
-                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
-                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
-                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2 + 40, 0, 100, 200);
-            }
-            break; 
-    }
+    setInterval(drawScene, 30);
 }
 
 // Рисуем основную функцию сцену
@@ -286,3 +204,83 @@ if (window.attachEvent) {
         window.onload = sceneInit;
     }
 }
+
+
+// Создание сцены с машинкой
+var TO_RADIANS = Math.PI/180; 
+var canvas_car = document.getElementById('car'),
+context_car = canvas_car.getContext('2d'),
+img = new Image();
+img.src = 'images/car.png';
+img.onload = function() {    
+    context_car.drawImage(img, (canvas_car.width/2 - 50) , (canvas_car.height/2 - 100), 100, 200);  
+}
+
+// Поворот изображения
+function drawRotatedImage(image, x, y, angle) { 
+
+    context_car.save(); 
+    //context_car.clearRect((canvas_car.width/2 - 50), (canvas_car.height/2 - 100), 100, 200);
+    context_car.clearRect(50, 0, canvas_car.width-50, canvas_car.height);
+    context_car.translate(x, y);
+
+    context_car.rotate(angle * TO_RADIANS);
+ 
+    context_car.drawImage(image, -(image.width/2), -(image.height/2));
+ 
+    context_car.restore(); 
+}
+
+
+// Обработчик события OnKeyDown
+function handleKeydown(e) {
+    kCode = ((e.which) || (e.keyCode));
+    switch (kCode) {
+        case 37: // Left Key
+            var x = 0;
+            var y = iHalfY;
+            if ((x >= 0) && (y >= 0)) {
+                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
+                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
+                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2, -30, 100, 200); 
+            }
+            break; 
+        case 38:  // Up key
+            var x = iHalfX;
+            var y = 0;
+            if ((x >= 0) && (y >= 0)) {
+                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
+                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
+                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2 - 40, 0, 100, 200);
+            }
+            break; 
+        case 39: // Right Key
+            var x = canvas.width;
+            var y = iHalfY;
+            if ((x >= 0) && (y >= 0)) {
+                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
+                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
+                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2, 30, 100, 200); 
+            }
+            break; 
+        case 40: // Down key
+            var x = iHalfX;
+            var y = canvas.height;
+            if ((x > 0) && (y > 0)) {
+                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
+                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
+                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2 + 40, 0, 100, 200);
+            }
+            break;
+        case 32 : // Space
+            var x = iHalfX;
+            var y = iHalfY;
+            if (x > 0 && y > 0) {
+                vShiftY = SpeedTurn * (x - iHalfX) / iHalfX;
+                vShiftX = SpeedTurn * (y - iHalfY) / iHalfY;
+                drawRotatedImage(img, canvas_car.width/2, canvas_car.height/2, 0, 100, 200); 
+            }
+            break; 
+    }
+}
+
