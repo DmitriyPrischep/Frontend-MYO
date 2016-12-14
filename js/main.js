@@ -23,9 +23,11 @@ socket.onmessage = function(event) {
         buyerData.labels.shift();
     }
     new Chart(buyers).Line(buyerData);
-    showMessage(data_myo.teor_speed);
+    showTeorSpeed(data_myo.teor_speed);
+    showRangeFinder(data_myo.range);
 
-    switch (data_myo.route) {
+    //switch (data_myo.route_myo)
+    switch (data_myo.route_car) {
         case 3: // Left Key
             var x = 0;
             var y = iHalfY;
@@ -73,10 +75,17 @@ socket.onmessage = function(event) {
     }
 };
 
-function showMessage(mes) {
+function showTeorSpeed(mes) {
     var div = document.getElementById('theoretical_speed');
     div.innerHTML = mes;
 }
+
+
+function showRangeFinder(mes) {
+    var div = document.getElementById('rangefinder');
+    div.innerHTML = mes;
+}
+
 
 // Структура графика
 var buyers = document.getElementById('buyers').getContext('2d');

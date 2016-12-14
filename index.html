@@ -7,64 +7,102 @@
 		<meta name="description" content="" />
 		
 		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<link rel="stylesheet" type="text/css" href="css/material.css">
+		<!-- <link rel="stylesheet" type="text/css" href="css/material.css"> -->
 	</head>
 
 	<body>
+		<header class="header header-text">
+			<div class="indent">
+				<strong class="header-text">CAR</strong> & MYO
+			</div>
+		</header>
 
-		<div class="wrapper mdl-shadow--8dp">
+		<main class="content">
+			
+			
 
-			<header class="header header-text">
-				<div class="indent">
-					<strong class="header-text">Машинка</strong> & MYO
-					<!-- <input type="submit" id="sub" value="Сгенерировать"></p> -->
-				</div>
-			</header>
-
-			<main class="content">
+			<div class="frame_1">
 				<div class="card-wide mdl-card mdl-shadow--16dp">
-					<div class="mdl-card__title">	
-						<h2 class="mdl-card__title-text">Скорость машинки</h2>
-					  	<div id="theoretical_speed" class="speed">99
-						</div>
+					<div class="mdl-card__title horizontal">	
+						<h2 class="mdl-card__title-text">Теоретическая скорость</h2>
 				  	</div>
-					<div class="mdl-card__supporting-text">
-						<div class="middle">
-	    					<canvas id="buyers" width="400" height="400"></canvas>
-    					</div>
-					</div>
+				  	<div class="frame_context">
+				  		<strong id="theoretical_speed" class="header-text">99</strong>
+				  	</div>
 				</div>
-				
+			</div>
+
+
+			<div class="frame_2">
+				<div class="card-wide mdl-card mdl-shadow--16dp">
+					<div class="mdl-card__title horizontal">	
+						<h2 class="mdl-card__title-text">Дальномер</h2>						
+				  	</div>
+				  	<div class="frame_context">
+				  		<strong id="rangefinder" class="header-text">325</strong>
+				  	</div>
+				</div>
+			</div>
+
+			
+			<div class="frame_3">
 				<div class="card-wide mdl-card mdl-shadow--16dp">
 					<div class="mdl-card__title">	
 						<h2 class="mdl-card__title-text">MYO</h2>
 				  	</div>
 					<div class="mdl-card__supporting-text">
 						<div class="middle">
-							<canvas id="scene" height="400" width="400" tabindex="1"></canvas>
+							<canvas id="scene" height="300" width="300" tabindex="1"></canvas>
 						</div>
-					</div>
+					</div>					
 				</div>
+			</div>
+
+			<div class="frame_3">
 				<div class="card-wide mdl-card mdl-shadow--16dp">
 					<div class="mdl-card__title ">
 						<h2 class="mdl-card__title-text">Направление движения</h2>
 				  	</div>
 					<div class="mdl-card__supporting-text">
 						<div class="middle">
-	    					<canvas id="car" width="400" height="400"></canvas>
-    					</div>
+	    					<canvas id="car" width="300" height="300"></canvas>
+						</div>
+					</div>
+				</div> 
+			</div>
+
+			<div class="frame_3">
+				<div class="card-wide mdl-card mdl-shadow--16dp">
+					<div class="mdl-card__title">	
+						<h2 class="mdl-card__title-text">Stream</h2>
+				  	</div>
+					<div class="mdl-card__supporting-text">
+						<div class="middle">
+							<img id="stream" src=""  width="300" height="290" onerror="this.src='images/error.png'">
+						</div>
 					</div>
 				</div>
-
-			</main><!-- .content -->
-
-		</div><!-- .wrapper -->
-
-		<footer class="footer footer-text">
-			<div class="footer-indent">
-				<strong class="footer-text">@pdvdev</strong> 	Developed by Prischep Dmitriy, 2016 ©
 			</div>
-		</footer><!-- .footer -->
+
+
+			<div class="frame_4">
+				<div class="card-wide mdl-card mdl-shadow--16dp">
+					<div class="mdl-card__title">	
+						<h2 class="mdl-card__title-text">Реальная скорость</h2>
+				  	</div>
+					<div class="mdl-card__supporting-text">
+						<div class="middle">
+	    					<canvas id="buyers" width="1230" height="180"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main><!-- .content -->
+
+		<!-- <footer class="footer footer-text">
+			<div class="footer-indent">
+				<strong class="footer-text">@pdvdev</strong> Dream team, 2016</div>
+		</footer> --><!-- .footer -->
 
 		<script src="js/Chart.js"></script>
 		<script src="js/meshes.js"></script>
